@@ -40,13 +40,26 @@ def buscar_procesos(fecha=None):
             continue
         ocids_vistos.add(ocid)
 
+        # Extraer URL del PDF de bases si existe
+        documentos = tender.get("documents", [])
+        url_pdf = ""
+        for doc in documentos:
+            if "base" in doc.get("documentType", "").lower() or \
+            "base" in doc.get("title", "").lower():
+                url_pdf = doc.get("url", "")
+                break
+        # Si no hay bases, tomar el primer documento disponible
+        if not url_pdf and documentos:
+            url_pdf = documentos[0].get("url", "")
+
         proceso = {
             "ocid": ocid,
             "titulo": tender.get("title", "Sin título"),
             "descripcion": tender.get("description", ""),
             "entidad": buyer.get("name", ""),
-            "monto": value.get("amount_PEN", 0),
+            "monto": value.get("amount", 0),  # ⚠️ también corregido: amount no amount_PEN
             "fecha_limite": tender.get("tenderPeriod", {}).get("endDate", ""),
+            "url_pdf": url_pdf,
             "fuente": "seace_v3"
         }
         procesos.append(proceso)
