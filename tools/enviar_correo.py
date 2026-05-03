@@ -26,14 +26,16 @@ No se encontraron procesos relevantes para C&N Solutions en SEACE hoy.
 
     msg = MIMEMultipart()
     msg["From"] = EMAIL_ORIGEN
-    msg["To"] = EMAIL_DESTINO
+
+    destinatarios = EMAIL_DESTINO.split(",")
+    msg["To"] = ", ".join(destinatarios)
     msg["Subject"] = asunto
     msg.attach(MIMEText(cuerpo, "plain", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as servidor:
             servidor.login(EMAIL_ORIGEN, EMAIL_PASSWORD)
-            servidor.sendmail(EMAIL_ORIGEN, EMAIL_DESTINO, msg.as_string())
+            servidor.sendmail(EMAIL_ORIGEN, destinatarios, msg.as_string())
         print(f"✅ Correo enviado a {EMAIL_DESTINO}")
         return True
     except Exception as e:
