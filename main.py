@@ -18,7 +18,7 @@ def main():
     with open("perfil_empresa.txt", "r", encoding="utf-8") as f:
         perfil = f.read()
 
-    fecha_hoy = date.today().isoformat()
+    fecha_hoy = "2025-04-15"
     procesos = buscar_procesos(fecha_hoy)
     print(f"--- Evaluando {len(procesos)} procesos ---\n")
 
